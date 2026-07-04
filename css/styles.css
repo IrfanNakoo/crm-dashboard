@@ -51,6 +51,37 @@ body {
 }
 
 /* ==========================================================================
+   PAGE TITLE — big professional branding header above the dashboard
+   ========================================================================== */
+
+.page-title {
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+  padding: 20px 4px 0 4px;
+  text-align: center;
+}
+
+.page-title__text {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--color-navy-dark);
+}
+
+.page-title__divider {
+  color: var(--color-accent-red);
+  font-weight: 800;
+  margin: 0 4px;
+}
+
+@media (max-width: 720px) {
+  .page-title__text {
+    font-size: 20px;
+  }
+}
+
+/* ==========================================================================
    HEADER — title bar + period bar, kept as two separate cells
    ========================================================================== */
 
