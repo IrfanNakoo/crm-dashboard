@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SA Associates Performance Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div id="dashboard" class="dashboard">
+
+    <!-- ============================================================
+         HEADER: title bar + period bar (kept as two separate cells,
+         matching the original spreadsheet layout)
+         ============================================================ -->
+    <header id="dashboard-header" class="dashboard-header">
+
+      <div id="title-bar" class="title-bar">
+        <span class="title-bar__accent" aria-hidden="true"></span>
+        <h1 id="dashboard-title" class="title-bar__text">SA ASSOCIATES PERFORMANCE</h1>
+      </div>
+
+      <div id="period-bar" class="period-bar">
+        <span class="period-bar__label">PERFORMANCE MONTH TO DATE</span>
+        <span id="current-month" class="period-bar__month">Jul</span>
+      </div>
+
+    </header>
+
+    <!-- ============================================================
+         KPI SECTION (reserved for future summary/KPI cards)
+         Intentionally empty in Milestone 1 — collapses to zero
+         height until populated by future JavaScript.
+         ============================================================ -->
+    <section id="kpi-section" class="kpi-section" aria-hidden="true"></section>
+
+    <!-- ============================================================
+         FILTERS SECTION (reserved for future filter controls,
+         e.g. search by name, filter by month/team)
+         ============================================================ -->
+    <section id="filters-section" class="filters-section" aria-hidden="true"></section>
+
+    <!-- ============================================================
+         PERFORMANCE TABLE
+         ============================================================ -->
+    <section id="performance-table-wrapper" class="performance-table-wrapper">
+      <table id="performance-table" class="performance-table">
+
+        <thead id="performance-table-head">
+          <tr>
+            <th scope="col" class="col-sa-id">SA ID</th>
+            <th scope="col" class="col-full-name">FULL NAME</th>
+            <th scope="col" class="col-prospects">PROSPECTS</th>
+            <th scope="col" class="col-bookings">BOOKINGS</th>
+            <th scope="col" class="col-submissions">SUBMISSIONS</th>
+            <th scope="col" class="col-rfa">RFA</th>
+            <th scope="col" class="col-registration">REGISTRATION</th>
+          </tr>
+        </thead>
+
+        <!-- Summary / totals row, isolated in its own tbody so it can
+             later be recalculated independently of individual rows -->
+        <tbody id="summary-row-body" class="summary-row">
+          <tr class="row row--summary" data-sa-id="ALL">
+            <td class="cell-sa-id">ALL</td>
+            <td class="cell-full-name"></td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">1</td>
+            <td class="cell-submissions">1</td>
+            <td class="cell-rfa">2</td>
+            <td class="cell-registration">0</td>
+          </tr>
+        </tbody>
+
+        <!-- Individual associate rows. This tbody is the target
+             container for future JavaScript to clear/rebuild rows
+             on every data refresh. -->
+        <tbody id="data-rows-body" class="data-rows">
+
+          <tr class="row" data-sa-id="3001">
+            <td class="cell-sa-id">3001</td>
+            <td class="cell-full-name name--blue">MUHAMMAD FITRI IKHWAN BIN MUHAMMAD SOBRI</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3002">
+            <td class="cell-sa-id">3002</td>
+            <td class="cell-full-name name--orange">MUHAMMAD FAZRUL SYAHMIR BIN ISMAIL</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3003">
+            <td class="cell-sa-id">3003</td>
+            <td class="cell-full-name name--blue">MUHAMMAD ROSYAMIZAL AFIQ</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3005">
+            <td class="cell-sa-id">3005</td>
+            <td class="cell-full-name name--blue">AHMAD SYAUQI BIN YAHYA</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3006">
+            <td class="cell-sa-id">3006</td>
+            <td class="cell-full-name name--orange">NORAINI BINTI HUMBERIT</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3007">
+            <td class="cell-sa-id">3007</td>
+            <td class="cell-full-name name--orange">MOHD FAZLAN EDEN@MALIK</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3008">
+            <td class="cell-sa-id">3008</td>
+            <td class="cell-full-name name--blue">MUHD EZZAT</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3009">
+            <td class="cell-sa-id">3009</td>
+            <td class="cell-full-name name--orange">HAMIM HUMAIRAH ABDUL LATIF</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">2</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3010">
+            <td class="cell-sa-id">3010</td>
+            <td class="cell-full-name name--orange">NOR KAMILAH MAMAT @ MAT RANI</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">1</td>
+            <td class="cell-submissions">1</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3011">
+            <td class="cell-sa-id">3011</td>
+            <td class="cell-full-name name--blue">SHARIFAH NOORUL NADIA BINTI SYED ABDULLAH</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3012">
+            <td class="cell-sa-id">3012</td>
+            <td class="cell-full-name name--orange">MUHAMAD HAKIMI</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3013">
+            <td class="cell-sa-id">3013</td>
+            <td class="cell-full-name name--blue">SARAH NAJIBAH BINTI MOHAMMAD KAMAL</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3014">
+            <td class="cell-sa-id">3014</td>
+            <td class="cell-full-name name--blue">AHMAD AZEEM BIN AZMAN</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3015">
+            <td class="cell-sa-id">3015</td>
+            <td class="cell-full-name name--orange">NURUL NAZIRAH BINTI MOHD RUDDIN</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3016">
+            <td class="cell-sa-id">3016</td>
+            <td class="cell-full-name name--green">NUR FARHANA</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3017">
+            <td class="cell-sa-id">3017</td>
+            <td class="cell-full-name name--green">NAUFAL AMAT</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+          <tr class="row" data-sa-id="3019">
+            <td class="cell-sa-id">3019</td>
+            <td class="cell-full-name name--blue">ARDIANSYAH</td>
+            <td class="cell-prospects">0</td>
+            <td class="cell-bookings">0</td>
+            <td class="cell-submissions">0</td>
+            <td class="cell-rfa">0</td>
+            <td class="cell-registration">0</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================
+         CHARTS SECTION (reserved for future charts/graphs)
+         ============================================================ -->
+    <section id="charts-section" class="charts-section" aria-hidden="true"></section>
+
+  </div>
+
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+/* ==========================================================================
+   CRM DASHBOARD — STYLES
+   Milestone 1: Static UI, placeholder data.
+   Visual language matches the source spreadsheet dashboard:
+   navy header bars, red accent tab, gridded table, color-coded names.
+   ========================================================================== */
+
+:root {
+  /* Color tokens — pulled directly from the reference spreadsheet */
+  --color-navy-dark: #1f3864;      /* title bar / period bar background */
+  --color-navy-mid: #2f5496;       /* column header row background */
+  --color-accent-red: #c00000;     /* accent tab on title bar */
+  --color-border: #b7c3d6;         /* grid lines */
+  --color-border-light: #d9e0ec;
+  --color-bg-page: #eef1f6;
+  --color-bg-table: #ffffff;
+  --color-bg-summary: #dbe4f3;     /* ALL / totals row background */
+  --color-text-header: #ffffff;
+  --color-text-body: #1c2733;
+
+  /* Name color-coding — matches the three colors seen in the sheet */
+  --color-name-blue: #1f4e79;
+  --color-name-orange: #c55a11;
+  --color-name-green: #375623;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-soft: 0 2px 6px rgba(31, 56, 100, 0.12);
+
+  --font-base: "Segoe UI", Tahoma, Verdana, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--color-bg-page);
+  font-family: var(--font-base);
+  color: var(--color-text-body);
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ==========================================================================
+   HEADER — title bar + period bar, kept as two separate cells
+   ========================================================================== */
+
+.dashboard-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.title-bar,
+.period-bar {
+  background: var(--color-navy-dark);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.title-bar {
+  flex: 1 1 320px;
+  position: relative;
+  padding-left: 20px;
+  overflow: hidden;
+}
+
+.title-bar__accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: var(--color-accent-red);
+}
+
+.title-bar__text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--color-text-header);
+  text-transform: uppercase;
+}
+
+.period-bar {
+  flex: 1 1 320px;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.period-bar__label {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--color-text-header);
+  text-transform: uppercase;
+}
+
+.period-bar__month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-header);
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 14px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   RESERVED SECTIONS — empty in Milestone 1, ready for future content
+   ========================================================================== */
+
+.kpi-section,
+.filters-section,
+.charts-section {
+  /* Intentionally no min-height: these collapse to 0 while empty
+     and will only affect layout once real content is added. */
+}
+
+.kpi-section:empty,
+.filters-section:empty,
+.charts-section:empty {
+  display: none;
+}
+
+/* ==========================================================================
+   PERFORMANCE TABLE
+   ========================================================================== */
+
+.performance-table-wrapper {
+  background: var(--color-bg-table);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  overflow-x: auto;
+  border: 1px solid var(--color-border-light);
+}
+
+.performance-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  font-size: 13px;
+}
+
+.performance-table thead th {
+  background: var(--color-navy-mid);
+  color: var(--color-text-header);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 10px 12px;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.performance-table thead th.col-full-name {
+  text-align: left;
+}
+
+.performance-table td {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-light);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.performance-table td.cell-full-name {
+  text-align: left;
+  font-weight: 600;
+}
+
+.performance-table td.cell-sa-id {
+  font-weight: 600;
+  color: #445064;
+}
+
+/* Data rows */
+.data-rows .row {
+  background: var(--color-bg-table);
+  transition: background-color 0.15s ease;
+}
+
+.data-rows .row:nth-child(even) {
+  background: #f6f8fc;
+}
+
+.data-rows .row:hover {
+  background: #eaf0fb;
+}
+
+/* Summary / totals row */
+.row--summary {
+  background: var(--color-bg-summary);
+  font-weight: 700;
+}
+
+.row--summary td {
+  border-top: 2px solid var(--color-navy-mid);
+  border-bottom: 2px solid var(--color-navy-mid);
+}
+
+/* Name color-coding — assigned via class, not inline style,
+   so future JS can set these based on a data field. */
+.name--blue {
+  color: var(--color-name-blue);
+}
+
+.name--orange {
+  color: var(--color-name-orange);
+}
+
+.name--green {
+  color: var(--color-name-green);
+}
+
+/* ==========================================================================
+   RESPONSIVE BEHAVIOR
+   Desktop appearance stays close to the spreadsheet; on narrow
+   screens the table scrolls horizontally rather than breaking layout.
+   ========================================================================== */
+
+@media (max-width: 720px) {
+  body {
+    padding: 12px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+  }
+
+  .title-bar__text,
+  .period-bar__label {
+    font-size: 13px;
+  }
+
+  .performance-table {
+    font-size: 12px;
+  }
+}
