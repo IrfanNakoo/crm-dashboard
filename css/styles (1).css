@@ -1,0 +1,186 @@
+/* ==========================================================================
+   BRANCH PERFORMANCE SUMMARY — Modern Business Dashboard Card
+   HTML/CSS only. No JavaScript.
+   ========================================================================== */
+
+:root {
+  --color-navy-dark: #1e3a5f;
+  --color-blue-header: #4a7fd6;
+  --color-blue-header-light: #5b8ce0;
+  --color-accent-dot: #3b82f6;
+
+  --color-row-alt: #eaf1fb;
+  --color-row-hover: #dbe8fb;
+  --color-total-bg: #fdf3d4;
+  --color-total-bg-hover: #fbecb8;
+
+  --color-border: #dfe6f0;
+  --color-text-dark: #1c2b3a;
+  --color-text-muted: #55647a;
+
+  --radius-lg: 16px;
+  --radius-md: 10px;
+
+  --shadow-card: 0 8px 24px rgba(30, 58, 95, 0.12);
+  --shadow-card-hover: 0 12px 32px rgba(30, 58, 95, 0.18);
+
+  --font-base: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 40px 20px;
+  background: linear-gradient(180deg, #f4f7fc 0%, #eaf0f9 100%);
+  font-family: var(--font-base);
+  color: var(--color-text-dark);
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   CARD
+   ========================================================================== */
+
+.card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   CARD HEADER
+   ========================================================================== */
+
+.card__header {
+  background: linear-gradient(135deg, var(--color-navy-dark) 0%, #234b78 100%);
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.card__header-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent-dot);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+  flex-shrink: 0;
+}
+
+.card__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   TABLE
+   ========================================================================== */
+
+.card__table-wrapper {
+  overflow-x: auto;
+}
+
+.branch-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+  font-size: 14.5px;
+}
+
+.branch-table thead th {
+  background: linear-gradient(135deg, var(--color-blue-header) 0%, var(--color-blue-header-light) 100%);
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.branch-table thead th.col-branch {
+  text-align: left;
+}
+
+.branch-table td {
+  padding: 13px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+  color: var(--color-text-dark);
+}
+
+.branch-table td.cell-branch {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-navy-dark);
+}
+
+/* Alternating row shading */
+.row:nth-child(even) {
+  background: var(--color-row-alt);
+}
+
+/* Hover effect on rows */
+.row:hover {
+  background: var(--color-row-hover);
+  transition: background-color 0.15s ease;
+}
+
+/* TOTAL row — distinct, highlighted */
+.row--total td {
+  font-weight: 800;
+  background: var(--color-total-bg);
+  border-top: 2px solid var(--color-navy-dark);
+  border-bottom: none;
+}
+
+.row--total:hover td {
+  background: var(--color-total-bg-hover);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 700px) {
+  body {
+    padding: 20px 12px;
+  }
+
+  .card__header {
+    padding: 18px 20px;
+  }
+
+  .card__title {
+    font-size: 17px;
+  }
+
+  .branch-table {
+    font-size: 13px;
+  }
+
+  .branch-table td,
+  .branch-table thead th {
+    padding: 10px 12px;
+  }
+}
