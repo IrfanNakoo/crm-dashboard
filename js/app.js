@@ -38,7 +38,7 @@ async function loadBranchSummary() {
 
 function renderTable(data) {
 
-    const tbody = document.getElementById("branchTableBody");
+    const tbody = document.getElementById("branch-rows");
 
     tbody.innerHTML = "";
 
@@ -70,8 +70,10 @@ function renderTable(data) {
 
     });
 
-    tbody.innerHTML += `
-        <tr class="total-row">
+    const totalBody = document.getElementById("branch-total-row");
+
+    totalBody.innerHTML = `
+        <tr class="row row--total">
             <td><strong>TOTAL</strong></td>
             <td><strong>${totalProspect}</strong></td>
             <td><strong>${totalBooking}</strong></td>
