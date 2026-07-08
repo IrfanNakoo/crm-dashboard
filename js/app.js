@@ -30,7 +30,7 @@ async function loadBranchSummary() {
 
         console.error(error);
 
-        alert("Unable to load Branch Summary.");
+        alert(error.message);
 
     }
 
