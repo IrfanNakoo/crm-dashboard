@@ -1,48 +1,85 @@
-console.log("APP START");
+// ======================================
+// CRM Dashboard - Branch Summary
+// Version 1.0
+// ======================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyiEBPEkGfp_-pk4YaeA6eAfj4Nnk7fnL-Xwzr3sXTSoHt44w6tlN4PALlysF8QtMiO/exec";
+console.log("CRM Dashboard Loaded");
 
-fetch(API_URL)
-.then(res => res.json())
-.then(data => {
+// Replace with your Apps Script Web App URL
+const API_URL = "https://script.google.com/macros/s/AKfycbwGfzdpNKZtOpNEdq6RrAYidw9zX2yTvDrasrUvlscoyLEz67hdni466e7YBKve1m02Kg/exec";
 
-    let totalProspects = 0;
-    let totalBookings = 0;
-    let totalSubmissions = 0;
+document.addEventListener("DOMContentLoaded", () => {
+    loadBranchSummary();
+});
+
+async function loadBranchSummary() {
+
+    try {
+
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Unable to connect to API");
+        }
+
+        const data = await response.json();
+
+        renderTable(data);
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to load Branch Summary.");
+
+    }
+
+}
+
+function renderTable(data) {
+
+    const tbody = document.getElementById("branchTableBody");
+
+    tbody.innerHTML = "";
+
+    let totalProspect = 0;
+    let totalBooking = 0;
+    let totalSubmission = 0;
     let totalRfa = 0;
     let totalRegistration = 0;
 
-    data.forEach(sa => {
+    data.forEach(branch => {
 
-        const row = document.querySelector(`[data-sa-id="${sa.said}"]`);
+        totalProspect += Number(branch.prospect);
+        totalBooking += Number(branch.booking);
+        totalSubmission += Number(branch.submission);
+        totalRfa += Number(branch.rfa);
+        totalRegistration += Number(branch.registration);
 
-        if (row) {
-            row.querySelector(".cell-prospects").textContent = sa.prospects;
-            row.querySelector(".cell-bookings").textContent = sa.bookings;
-            row.querySelector(".cell-submissions").textContent = sa.submissions;
-            row.querySelector(".cell-rfa").textContent = sa.rfa;
-            row.querySelector(".cell-registration").textContent = sa.registration;
-        }
-
-        totalProspects += Number(sa.prospects) || 0;
-        totalBookings += Number(sa.bookings) || 0;
-        totalSubmissions += Number(sa.submissions) || 0;
-        totalRfa += Number(sa.rfa) || 0;
-        totalRegistration += Number(sa.registration) || 0;
+        tbody.innerHTML += `
+            <tr>
+                <td>${branch.branch}</td>
+                <td>${branch.prospect}</td>
+                <td>${branch.booking}</td>
+                <td>${branch.submission}</td>
+                <td>${branch.rfa}</td>
+                <td>${branch.registration}</td>
+                <td>${(Number(branch.conversion) * 100).toFixed(1)}%</td>
+            </tr>
+        `;
 
     });
 
-    const totalRow = document.querySelector('[data-sa-id="ALL"]');
+    tbody.innerHTML += `
+        <tr class="total-row">
+            <td><strong>TOTAL</strong></td>
+            <td><strong>${totalProspect}</strong></td>
+            <td><strong>${totalBooking}</strong></td>
+            <td><strong>${totalSubmission}</strong></td>
+            <td><strong>${totalRfa}</strong></td>
+            <td><strong>${totalRegistration}</strong></td>
+            <td><strong>${((totalRegistration / totalProspect) * 100).toFixed(1)}%</strong></td>
+        </tr>
+    `;
 
-    if (totalRow) {
-        totalRow.querySelector(".cell-prospects").textContent = totalProspects;
-        totalRow.querySelector(".cell-bookings").textContent = totalBookings;
-        totalRow.querySelector(".cell-submissions").textContent = totalSubmissions;
-        totalRow.querySelector(".cell-rfa").textContent = totalRfa;
-        totalRow.querySelector(".cell-registration").textContent = totalRegistration;
-    }
-
-})
-.catch(error => {
-    console.error(error);
-});
+}
