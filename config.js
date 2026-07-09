@@ -8,6 +8,6 @@
  * quotas and every dashboard tab open counts as a separate caller.
  */
 window.CONFIG = {
-  SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwGfzdpNKZtOpNEdq6RrAYidw9zX2yTvDrasrUvlscoyLEz67hdni466e7YBKve1m02Kg/exec",
   REFRESH_INTERVAL_MS: 30000
 };
