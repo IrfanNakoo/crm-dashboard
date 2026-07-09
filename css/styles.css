@@ -1,30 +1,35 @@
 /* ==========================================================================
-   BRANCH PERFORMANCE SUMMARY — Modern Business Dashboard Card
-   HTML/CSS only. No JavaScript.
+   SALES CAPTAIN DASHBOARD — Clean, minimal, card-based
+   Pure HTML + CSS. No frameworks. Real data parsed from the source workbook.
    ========================================================================== */
 
 :root {
-  --color-navy-dark: #1e3a5f;
-  --color-blue-header: #4a7fd6;
-  --color-blue-header-light: #5b8ce0;
-  --color-accent-dot: #3b82f6;
+  --bg-page: #F6F7F9;
+  --bg-card: #FFFFFF;
+  --border-subtle: #E7E9EE;
+  --border-strong: #D8DCE3;
 
-  --color-row-alt: #eaf1fb;
-  --color-row-hover: #dbe8fb;
-  --color-total-bg: #fdf3d4;
-  --color-total-bg-hover: #fbecb8;
+  --text-primary: #14171F;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
 
-  --color-border: #dfe6f0;
-  --color-text-dark: #1c2b3a;
-  --color-text-muted: #55647a;
+  --blue-600: #3762F1;
+  --blue-700: #2748C4;
+  --blue-50: #EEF2FF;
 
-  --radius-lg: 16px;
+  --green-600: #128A5E;
+  --green-50: #EAFBF3;
+  --red-600: #D0342C;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 4px 16px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 8px 28px rgba(16, 24, 40, 0.09);
+
+  --radius-lg: 14px;
   --radius-md: 10px;
+  --radius-sm: 7px;
 
-  --shadow-card: 0 8px 24px rgba(30, 58, 95, 0.12);
-  --shadow-card-hover: 0 12px 32px rgba(30, 58, 95, 0.18);
-
-  --font-base: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * {
@@ -33,154 +38,489 @@
 
 body {
   margin: 0;
-  padding: 40px 20px;
-  background: linear-gradient(180deg, #f4f7fc 0%, #eaf0f9 100%);
+  background: var(--bg-page);
   font-family: var(--font-base);
-  color: var(--color-text-dark);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
 }
 
-.page {
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-/* ==========================================================================
-   CARD
-   ========================================================================== */
-
-.card {
-  background: #ffffff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.card:hover {
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ==========================================================================
-   CARD HEADER
+   TOP BAR
    ========================================================================== */
 
-.card__header {
-  background: linear-gradient(135deg, var(--color-navy-dark) 0%, #234b78 100%);
-  padding: 22px 28px;
+.topbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 14px 28px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  position: relative;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-.card__header-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-accent-dot);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar__mark {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--blue-600) 0%, #6B8AFD 100%);
   flex-shrink: 0;
 }
 
-.card__title {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 800;
+.topbar__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.topbar__badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--blue-700);
+  background: var(--blue-50);
+  padding: 2px 8px;
+  border-radius: 100px;
   letter-spacing: 0.02em;
-  color: #ffffff;
-  text-transform: uppercase;
+}
+
+.topbar__search {
+  width: 240px;
+  max-width: 40vw;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  font-family: var(--font-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.topbar__search:focus {
+  outline: none;
+  border-color: var(--blue-600);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px var(--blue-50);
+}
+
+.topbar__search::placeholder {
+  color: var(--text-tertiary);
 }
 
 /* ==========================================================================
-   TABLE
+   APP BODY / LAYOUT
    ========================================================================== */
 
-.card__table-wrapper {
+.app__body {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 28px 60px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==========================================================================
+   PRIMARY SECTION SWITCH — Branch Overview vs Team Detail
+   ========================================================================== */
+
+.section-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.primary-tabs {
+  display: flex;
+  gap: 8px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 20px auto 0 auto;
+  padding: 0 28px;
+}
+
+.primary-tab {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.primary-tab:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+#section-overview:checked ~ .primary-tabs label[for="section-overview"],
+#section-detail:checked ~ .primary-tabs label[for="section-detail"] {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.primary-panel {
+  display: none;
+}
+
+#section-overview:checked ~ #view-overview,
+#section-detail:checked ~ #view-detail {
+  display: flex;
+}
+
+/* ---- Static (non-tabbed) card header, used on Branch Overview ---- */
+
+.table-card__header--static {
+  justify-content: flex-start;
+}
+
+.table-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.kpi-row--six {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+@media (max-width: 1100px) {
+  .kpi-row--six {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpi-row--six {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .primary-tabs {
+    padding: 0 16px;
+  }
+}
+
+/* ==========================================================================
+   KPI CARDS
+   ========================================================================== */
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.kpi-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kpi-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   TABLE CARD
+   ========================================================================== */
+
+.table-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.table-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ---- Tabs (CSS-only, driven by hidden radio inputs) ---- */
+
+.breakdown-toggle,
+.tab-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-page);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.tab-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.tab-label:hover {
+  color: var(--text-primary);
+}
+
+#tab-overview:checked ~ .table-card__header label[for="tab-overview"] { background: var(--bg-card); color: var(--blue-700); box-shadow: var(--shadow-sm); }
+#tab-dungun:checked ~ .table-card__header label[for="tab-dungun"] { background: var(--bg-card); color: var(--blue-700); box-shadow: var(--shadow-sm); }
+#tab-kn:checked ~ .table-card__header label[for="tab-kn"] { background: var(--bg-card); color: var(--blue-700); box-shadow: var(--shadow-sm); }
+#tab-jt:checked ~ .table-card__header label[for="tab-jt"] { background: var(--bg-card); color: var(--blue-700); box-shadow: var(--shadow-sm); }
+#tab-jk:checked ~ .table-card__header label[for="tab-jk"] { background: var(--bg-card); color: var(--blue-700); box-shadow: var(--shadow-sm); }
+#tab-nev:checked ~ .table-card__header label[for="tab-nev"] { background: var(--bg-card); color: var(--blue-700); box-shadow: var(--shadow-sm); }
+
+/* ---- Breakdown toggle switch ---- */
+
+.breakdown-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.breakdown-toggle-switch {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  background: var(--border-strong);
+  border-radius: 100px;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.breakdown-toggle-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.breakdown-toggle:checked ~ .table-card__header .breakdown-toggle-switch {
+  background: var(--blue-600);
+}
+
+.breakdown-toggle:checked ~ .table-card__header .breakdown-toggle-switch::after {
+  transform: translateX(14px);
+}
+
+/* ---- Tab panels ---- */
+
+.tab-panel {
+  display: none;
+}
+
+#tab-overview:checked ~ .tab-panels #panel-overview,
+#tab-dungun:checked ~ .tab-panels #panel-dungun,
+#tab-kn:checked ~ .tab-panels #panel-kn,
+#tab-jt:checked ~ .tab-panels #panel-jt,
+#tab-jk:checked ~ .tab-panels #panel-jk,
+#tab-nev:checked ~ .tab-panels #panel-nev {
+  display: block;
+}
+
+/* ==========================================================================
+   PERFORMANCE TABLE
+   ========================================================================== */
+
+.table-scroll {
   overflow-x: auto;
 }
 
-.branch-table {
+.perf-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 640px;
-  font-size: 14.5px;
+  min-width: 900px;
+  font-size: 13px;
 }
 
-.branch-table thead th {
-  background: linear-gradient(135deg, var(--color-blue-header) 0%, var(--color-blue-header-light) 100%);
-  color: #ffffff;
-  font-weight: 700;
-  text-align: center;
-  padding: 14px 16px;
-  border-bottom: 2px solid var(--color-border);
-  white-space: nowrap;
-}
-
-.branch-table thead th.col-branch {
+.perf-table thead th {
   text-align: left;
-}
-
-.branch-table td {
-  padding: 13px 16px;
-  text-align: center;
-  border-bottom: 1px solid var(--color-border);
-  white-space: nowrap;
-  color: var(--color-text-dark);
-}
-
-.branch-table td.cell-branch {
-  text-align: left;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--color-navy-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  background: var(--bg-card);
 }
 
-/* Alternating row shading */
-.row:nth-child(even) {
-  background: var(--color-row-alt);
+.perf-table__group-row th {
+  border-bottom: none;
+  padding-bottom: 0;
+  color: var(--text-tertiary);
+  font-weight: 600;
 }
 
-/* Hover effect on rows */
-.row:hover {
-  background: var(--color-row-hover);
-  transition: background-color 0.15s ease;
+.perf-table th.num,
+.perf-table td.num {
+  text-align: right;
 }
 
-/* TOTAL row — distinct, highlighted */
-.row--total td {
-  font-weight: 800;
-  background: var(--color-total-bg);
-  border-top: 2px solid var(--color-navy-dark);
+.perf-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.perf-table tbody tr:hover {
+  background: var(--bg-page);
+}
+
+.perf-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.row--total:hover td {
-  background: var(--color-total-bg-hover);
+.cell-name {
+  font-weight: 600;
+}
+
+/* ---- Detail (breakdown) columns — hidden by default ---- */
+
+.detail-col {
+  display: none;
+}
+
+.breakdown-toggle:checked ~ .tab-panels .detail-col {
+  display: table-cell;
+}
+
+.detail-col-group {
+  text-align: center;
+  background: var(--blue-50);
+  color: var(--blue-700);
+}
+
+/* ---- Total row ---- */
+
+.row--total td {
+  font-weight: 700;
+  background: var(--blue-50);
+  border-bottom: none;
+  border-top: 1px solid var(--border-strong);
+}
+
+/* ---- Badges ---- */
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.badge--yes {
+  background: var(--green-50);
+  color: var(--green-600);
+}
+
+.badge--no {
+  background: #F3F4F6;
+  color: var(--text-tertiary);
+}
+
+.badge--muted {
+  background: #F3F4F6;
+  color: var(--text-tertiary);
 }
 
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 
-@media (max-width: 700px) {
-  body {
-    padding: 20px 12px;
+@media (max-width: 1100px) {
+  .kpi-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    padding: 12px 16px;
   }
 
-  .card__header {
-    padding: 18px 20px;
+  .topbar__search {
+    width: 140px;
   }
 
-  .card__title {
-    font-size: 17px;
+  .app__body {
+    padding: 18px 16px 40px 16px;
   }
 
-  .branch-table {
-    font-size: 13px;
+  .kpi-row {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .branch-table td,
-  .branch-table thead th {
-    padding: 10px 12px;
+  .table-card__header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
