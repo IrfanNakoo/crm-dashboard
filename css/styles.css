@@ -400,6 +400,57 @@ body {
 
 .table-scroll {
   overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+/* ---- Horizontal scroll buttons ---- */
+
+.table-scroll-outer {
+  position: relative;
+}
+
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+.scroll-btn:hover:not(:disabled) {
+  background: var(--blue-50);
+  color: var(--blue-700);
+}
+
+.scroll-btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.scroll-btn:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-btn--prev {
+  left: 8px;
+}
+
+.scroll-btn--next {
+  right: 8px;
 }
 
 .perf-table {
