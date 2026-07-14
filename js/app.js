@@ -201,7 +201,6 @@
         var updated = data.updatedAt ? new Date(data.updatedAt) : new Date();
         setSyncStatus("Last synced " + updated.toLocaleTimeString());
         isFirstLoad = false;
-        refreshAllScrollStates();
       })
       .catch(function (err) {
         console.error("Dashboard sync failed:", err);
@@ -251,62 +250,11 @@
   }
 
   // --------------------------------------------------------------------
-  // Horizontal scroll buttons — click-to-scroll, auto-disabled at edges
-  // --------------------------------------------------------------------
-
-  function initScrollButtons() {
-    var outers = document.querySelectorAll(".table-scroll-outer");
-    outers.forEach(function (outer) {
-      var scrollEl = outer.querySelector(".table-scroll");
-      var prevBtn = outer.querySelector(".scroll-btn--prev");
-      var nextBtn = outer.querySelector(".scroll-btn--next");
-      if (!scrollEl || !prevBtn || !nextBtn) return;
-
-      function updateState() {
-        var maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
-        prevBtn.disabled = scrollEl.scrollLeft <= 1;
-        nextBtn.disabled = scrollEl.scrollLeft >= maxScroll - 1;
-      }
-
-      prevBtn.addEventListener("click", function () {
-        scrollEl.scrollBy({ left: -420, behavior: "smooth" });
-      });
-      nextBtn.addEventListener("click", function () {
-        scrollEl.scrollBy({ left: 420, behavior: "smooth" });
-      });
-      scrollEl.addEventListener("scroll", updateState);
-      window.addEventListener("resize", updateState);
-
-      updateState();
-      outer.__updateScrollState = updateState;
-    });
-  }
-
-  /** Re-checks all scroll button states — call after switching tabs, since a
-   *  panel that was just made visible may not have had accurate measurements
-   *  while it was display:none. */
-  function refreshAllScrollStates() {
-    requestAnimationFrame(function () {
-      document.querySelectorAll(".table-scroll-outer").forEach(function (outer) {
-        if (outer.__updateScrollState) outer.__updateScrollState();
-      });
-    });
-  }
-
-  function initTabChangeRescans() {
-    document.querySelectorAll('input[name="team"], input[name="section"]').forEach(function (radio) {
-      radio.addEventListener("change", refreshAllScrollStates);
-    });
-  }
-
-  // --------------------------------------------------------------------
   // Init
   // --------------------------------------------------------------------
 
   document.addEventListener("DOMContentLoaded", function () {
     initSearch();
-    initScrollButtons();
-    initTabChangeRescans();
     refresh();
     setInterval(refresh, (window.CONFIG && window.CONFIG.REFRESH_INTERVAL_MS) || 30000);
   });
