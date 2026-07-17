@@ -97,6 +97,78 @@
   }
 
   // --------------------------------------------------------------------
+  // Weekly Performance Target (Week 1) — NEW, additive only.
+  // Classifies each SA by YOS, compares their existing Prospect/Booking%/
+  // Submission%/Register% against the target for their tier, and renders
+  // a pass/fail badge. Weeks 2-4 are placeholders for future weeks.
+  // Does not alter baseCells/detailCells/teamRowHtml's existing outputs —
+  // only adds a new cell block between them.
+  // --------------------------------------------------------------------
+
+  var WEEK1_TARGETS = {
+    rookie1: { prospect: 50,  booking_pct: 1,  submission_pct: 0,  register_pct: 0 },
+    rookie2: { prospect: 100, booking_pct: 1,  submission_pct: 0,  register_pct: 0 },
+    otai:    { prospect: 100, booking_pct: 10, submission_pct: 50, register_pct: 50 }
+  };
+
+  function parseYOSMonths(yos) {
+    if (!yos) return null;
+    var s = String(yos).trim().toUpperCase();
+    var m = s.match(/([\d.]+)\s*(YR|Y|MO|M|WK|W)\b/);
+    if (!m) return null;
+    var val = parseFloat(m[1]);
+    var unit = m[2];
+    if (unit === "YR" || unit === "Y") return val * 12;
+    if (unit === "MO" || unit === "M") return val;
+    if (unit === "WK" || unit === "W") return val / 4.345;
+    return null;
+  }
+
+  function classifyYOS(yos) {
+    var months = parseYOSMonths(yos);
+    if (months === null) return null;
+    if (months <= 3) return "rookie1";
+    if (months <= 6) return "rookie2";
+    return "otai";
+  }
+
+  function evalWeek1Metric(value, target) {
+    if (value === null || value === undefined || target === null || target === undefined) {
+      return { status: "neutral", text: "–" };
+    }
+    var passed = value >= target;
+    return { status: passed ? "pass" : "fail", text: String(value) };
+  }
+
+  function weeklyTargetCells(entry, isTotal) {
+    var tier = isTotal ? null : classifyYOS(entry.yos);
+    var targets = tier ? WEEK1_TARGETS[tier] : null;
+
+    var g = entry.groups || {};
+    var prospectVal = g.prospek ? g.prospek.total : null;
+    var bookingPct = g.booking && g.booking.pct !== null && g.booking.pct !== undefined ? g.booking.pct * 100 : null;
+    var submissionPct = g.submission && g.submission.pct !== null && g.submission.pct !== undefined ? g.submission.pct * 100 : null;
+    var registerPct = g.register && g.register.pct !== null && g.register.pct !== undefined ? g.register.pct * 100 : null;
+
+    var p = targets ? evalWeek1Metric(prospectVal, targets.prospect) : { status: "neutral", text: "–" };
+    var b = targets ? evalWeek1Metric(bookingPct, targets.booking_pct) : { status: "neutral", text: "–" };
+    var s = targets ? evalWeek1Metric(submissionPct, targets.submission_pct) : { status: "neutral", text: "–" };
+    var r = targets ? evalWeek1Metric(registerPct, targets.register_pct) : { status: "neutral", text: "–" };
+
+    var week1 =
+      '<td class="num week-cell week-' + p.status + '">' + p.text + "</td>" +
+      '<td class="num week-cell week-' + b.status + '">' + (b.status === "neutral" ? "–" : b.text + "%") + "</td>" +
+      '<td class="num week-cell week-' + s.status + '">' + (s.status === "neutral" ? "–" : s.text + "%") + "</td>" +
+      '<td class="num week-cell week-' + r.status + '">' + (r.status === "neutral" ? "–" : r.text + "%") + "</td>";
+
+    var placeholder = '<td class="num week-cell week-neutral week-placeholder">–</td>';
+    var weeks234 = "";
+    for (var i = 0; i < 12; i++) weeks234 += placeholder;
+
+    return week1 + weeks234;
+  }
+
+  // --------------------------------------------------------------------
   // Team Detail rendering
   // --------------------------------------------------------------------
 
@@ -138,7 +210,7 @@
 
   function teamRowHtml(entry, isTotal) {
     var cls = isTotal ? ' class="row--total"' : "";
-    return "<tr" + cls + ">" + baseCells(entry) + detailCells(entry) + "</tr>";
+    return "<tr" + cls + ">" + baseCells(entry) + weeklyTargetCells(entry, isTotal) + detailCells(entry) + "</tr>";
   }
 
   function renderTeamDetail(teams) {
