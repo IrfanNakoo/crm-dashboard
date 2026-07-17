@@ -499,6 +499,74 @@ body {
   color: var(--blue-700);
 }
 
+/* ==========================================================================
+   BREAKDOWN GROUP COLOR SYSTEM
+   Each "Breakdown" group (On Ground / Online / Live / Prospect / Booking /
+   Submission / Register) gets a distinct soft color on its group header,
+   plus a stronger divider border marking where the group starts — so the
+   table reads as several small sections rather than one continuous block.
+   ========================================================================== */
+
+:root {
+  --dg-onground-bg: #EAF2FF;    --dg-onground-text: #1D4ED8;    --dg-onground-border: #93C5FD;
+  --dg-online-bg: #F3EAFE;      --dg-online-text: #7C3AED;      --dg-online-border: #C4B5FD;
+  --dg-live-bg: #EAFBF0;        --dg-live-text: #15803D;        --dg-live-border: #86EFAC;
+  --dg-prospek-bg: #FFF4E5;     --dg-prospek-text: #C2650A;     --dg-prospek-border: #FDBA74;
+  --dg-booking-bg: #FDECEC;     --dg-booking-text: #B91C1C;     --dg-booking-border: #FCA5A5;
+  --dg-submission-bg: #E6FBF8;  --dg-submission-text: #0F766E;  --dg-submission-border: #5EEAD4;
+  --dg-register-bg: #F3F4F6;    --dg-register-text: #4B5563;    --dg-register-border: #D1D5DB;
+}
+
+/* Group headers — soft colored background + matching darker text */
+.perf-table thead th.detail-col-group.dg-onground    { background: var(--dg-onground-bg);    color: var(--dg-onground-text); }
+.perf-table thead th.detail-col-group.dg-online      { background: var(--dg-online-bg);      color: var(--dg-online-text); }
+.perf-table thead th.detail-col-group.dg-live        { background: var(--dg-live-bg);        color: var(--dg-live-text); }
+.perf-table thead th.detail-col-group.dg-prospek     { background: var(--dg-prospek-bg);     color: var(--dg-prospek-text); }
+.perf-table thead th.detail-col-group.dg-booking     { background: var(--dg-booking-bg);     color: var(--dg-booking-text); }
+.perf-table thead th.detail-col-group.dg-submission  { background: var(--dg-submission-bg);  color: var(--dg-submission-text); }
+.perf-table thead th.detail-col-group.dg-register    { background: var(--dg-register-bg);    color: var(--dg-register-text); }
+
+/* Sub-headers (SAGA / PERS / S70 etc.) stay neutral white — only the
+   divider border at the start of each group hints at the color above */
+.perf-table thead tr:not(.perf-table__group-row) th.detail-col {
+  background: var(--bg-card);
+  font-weight: 600;
+}
+
+/* Strong divider (3px) at the start of every group — header, sub-header,
+   and every body/total row — so the boundary is visible while scrolling
+   horizontally, without needing to see the colored header at the same time */
+.dg-onground-first    { border-left: 3px solid var(--dg-onground-border) !important;    padding-left: 18px !important; }
+.dg-online-first      { border-left: 3px solid var(--dg-online-border) !important;      padding-left: 18px !important; }
+.dg-live-first         { border-left: 3px solid var(--dg-live-border) !important;        padding-left: 18px !important; }
+.dg-prospek-first     { border-left: 3px solid var(--dg-prospek-border) !important;     padding-left: 18px !important; }
+.dg-booking-first     { border-left: 3px solid var(--dg-booking-border) !important;     padding-left: 18px !important; }
+.dg-submission-first  { border-left: 3px solid var(--dg-submission-border) !important;  padding-left: 18px !important; }
+.dg-register-first    { border-left: 3px solid var(--dg-register-border) !important;    padding-left: 18px !important; }
+
+/* ---- Zebra striping on data rows (all columns, base + breakdown alike) ---- */
+
+.perf-table tbody tr:nth-child(odd) td {
+  background: #FFFFFF;
+}
+
+.perf-table tbody tr:nth-child(even) td {
+  background: #FAFAFA;
+}
+
+.perf-table tbody tr:hover td {
+  background: var(--bg-page);
+}
+
+/* ---- Sticky header — both header rows stay visible while scrolling
+   vertically within the bounded .table-scroll container ---- */
+
+.perf-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
 /* ---- Total row ---- */
 
 .row--total td {
