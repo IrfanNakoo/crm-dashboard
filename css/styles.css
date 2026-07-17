@@ -601,15 +601,15 @@ body {
 
 .week-pass {
   background: #EAFBF1 !important;
-  color: #15803D;
-  font-weight: 700;
+  color: var(--text-primary);
+  font-weight: 600;
   border-color: #A7F3D0 !important;
 }
 
 .week-fail {
   background: #FEF2F2 !important;
-  color: #DC2626;
-  font-weight: 700;
+  color: var(--text-primary);
+  font-weight: 600;
   border-color: #FECACA !important;
 }
 

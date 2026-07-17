@@ -132,12 +132,23 @@
     return "otai";
   }
 
-  function evalWeek1Metric(value, target) {
-    if (value === null || value === undefined || target === null || target === undefined) {
+  function evalWeek1Metric(rawValue, target, kind) {
+    var value = (typeof rawValue === "number" && isFinite(rawValue)) ? rawValue : null;
+    if (value === null || target === null || target === undefined) {
       return { status: "neutral", text: "–" };
     }
+    // Pass/fail uses the raw, unrounded value — only the displayed text is rounded.
     var passed = value >= target;
-    return { status: passed ? "pass" : "fail", text: String(value) };
+    var text = kind === "pct" ? value.toFixed(1) + "%" : String(Math.round(value));
+    return { status: passed ? "pass" : "fail", text: text };
+  }
+
+  function neutralWeek1Result() {
+    return { status: "neutral", text: "–" };
+  }
+
+  function toValidNumber(v) {
+    return (typeof v === "number" && isFinite(v)) ? v : null;
   }
 
   function weeklyTargetCells(entry, isTotal) {
@@ -145,21 +156,25 @@
     var targets = tier ? WEEK1_TARGETS[tier] : null;
 
     var g = entry.groups || {};
-    var prospectVal = g.prospek ? g.prospek.total : null;
-    var bookingPct = g.booking && g.booking.pct !== null && g.booking.pct !== undefined ? g.booking.pct * 100 : null;
-    var submissionPct = g.submission && g.submission.pct !== null && g.submission.pct !== undefined ? g.submission.pct * 100 : null;
-    var registerPct = g.register && g.register.pct !== null && g.register.pct !== undefined ? g.register.pct * 100 : null;
+    var prospectVal = toValidNumber(g.prospek ? g.prospek.total : null);
+    var bookingPctRaw = toValidNumber(g.booking ? g.booking.pct : null);
+    var submissionPctRaw = toValidNumber(g.submission ? g.submission.pct : null);
+    var registerPctRaw = toValidNumber(g.register ? g.register.pct : null);
 
-    var p = targets ? evalWeek1Metric(prospectVal, targets.prospect) : { status: "neutral", text: "–" };
-    var b = targets ? evalWeek1Metric(bookingPct, targets.booking_pct) : { status: "neutral", text: "–" };
-    var s = targets ? evalWeek1Metric(submissionPct, targets.submission_pct) : { status: "neutral", text: "–" };
-    var r = targets ? evalWeek1Metric(registerPct, targets.register_pct) : { status: "neutral", text: "–" };
+    var bookingPct = bookingPctRaw !== null ? bookingPctRaw * 100 : null;
+    var submissionPct = submissionPctRaw !== null ? submissionPctRaw * 100 : null;
+    var registerPct = registerPctRaw !== null ? registerPctRaw * 100 : null;
+
+    var p = targets ? evalWeek1Metric(prospectVal, targets.prospect, "int") : neutralWeek1Result();
+    var b = targets ? evalWeek1Metric(bookingPct, targets.booking_pct, "pct") : neutralWeek1Result();
+    var s = targets ? evalWeek1Metric(submissionPct, targets.submission_pct, "pct") : neutralWeek1Result();
+    var r = targets ? evalWeek1Metric(registerPct, targets.register_pct, "pct") : neutralWeek1Result();
 
     var week1 =
       '<td class="num week-cell week-' + p.status + '">' + p.text + "</td>" +
-      '<td class="num week-cell week-' + b.status + '">' + (b.status === "neutral" ? "–" : b.text + "%") + "</td>" +
-      '<td class="num week-cell week-' + s.status + '">' + (s.status === "neutral" ? "–" : s.text + "%") + "</td>" +
-      '<td class="num week-cell week-' + r.status + '">' + (r.status === "neutral" ? "–" : r.text + "%") + "</td>";
+      '<td class="num week-cell week-' + b.status + '">' + b.text + "</td>" +
+      '<td class="num week-cell week-' + s.status + '">' + s.text + "</td>" +
+      '<td class="num week-cell week-' + r.status + '">' + r.text + "</td>";
 
     var placeholder = '<td class="num week-cell week-neutral week-placeholder">–</td>';
     var weeks234 = "";
