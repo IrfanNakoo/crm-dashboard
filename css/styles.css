@@ -483,6 +483,16 @@ body {
   font-weight: 600;
 }
 
+/* ---- Divider between activity metrics (On Ground/Online/Live Session)
+   and outcome metrics (Prospect MTD onward) — Prospect MTD is always
+   the 8th column in the base Team Detail layout, so this targets it
+   by position rather than needing new classes on every row. ---- */
+.tab-panels .perf-table thead tr:not(.perf-table__group-row) th:nth-child(8),
+.tab-panels .perf-table tbody td:nth-child(8),
+.tab-panels .perf-table tfoot td:nth-child(8) {
+  border-left: 2px solid #D9E2F2;
+}
+
 /* ---- Detail (breakdown) columns — hidden by default ---- */
 
 .detail-col {
