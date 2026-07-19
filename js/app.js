@@ -97,12 +97,11 @@
   }
 
   // --------------------------------------------------------------------
-  // Weekly Performance Target (Week 1) — NEW, additive only.
-  // Classifies each SA by YOS, compares their existing Prospect/Booking%/
-  // Submission%/Register% against the target for their tier, and renders
-  // a pass/fail badge. Weeks 2-4 are placeholders for future weeks.
-  // Does not alter baseCells/detailCells/teamRowHtml's existing outputs —
-  // only adds a new cell block between them.
+  // Weekly KPI Scorecard (Week 1) — NEW, additive, renders into its own
+  // standalone card/table (#kpi-rows-{key}), separate from the main
+  // Team Detail table. Cells show the TARGET value, colored by whether
+  // the SA's existing Prospect/Booking%/Submission%/Register% met it.
+  // Does not touch baseCells, detailCells, or teamRowHtml.
   // --------------------------------------------------------------------
 
   var WEEK1_TARGETS = {
@@ -132,55 +131,66 @@
     return "otai";
   }
 
-  function evalWeek1Metric(rawValue, target, kind) {
-    var value = (typeof rawValue === "number" && isFinite(rawValue)) ? rawValue : null;
-    if (value === null || target === null || target === undefined) {
-      return { status: "neutral", text: "–" };
-    }
-    // Pass/fail uses the raw, unrounded value — only the displayed text is rounded.
-    var passed = value >= target;
-    var text = kind === "pct" ? value.toFixed(1) + "%" : String(Math.round(value));
-    return { status: passed ? "pass" : "fail", text: text };
-  }
-
-  function neutralWeek1Result() {
-    return { status: "neutral", text: "–" };
-  }
-
   function toValidNumber(v) {
     return (typeof v === "number" && isFinite(v)) ? v : null;
   }
 
-  function weeklyTargetCells(entry, isTotal) {
+  /** Cell shows the TARGET value (not the actual figure), colored by
+   *  whether the actual value met that target. */
+  function scorecardCell(actual, target, targetText) {
+    if (actual === null || target === null || target === undefined) {
+      return '<td class="kpi-cell kpi-neutral">–</td>';
+    }
+    var passed = actual >= target;
+    return '<td class="kpi-cell ' + (passed ? "kpi-pass" : "kpi-fail") + '">' + targetText + "</td>";
+  }
+
+  function kpiScorecardRowHtml(entry, isTotal) {
+    var cls = isTotal ? ' class="row--total"' : "";
+    var nameCell = '<td class="cell-name">' + esc(entry.name || (isTotal ? "TOTAL" : "—")) + "</td>";
+
     var tier = isTotal ? null : classifyYOS(entry.yos);
     var targets = tier ? WEEK1_TARGETS[tier] : null;
 
-    var g = entry.groups || {};
-    var prospectVal = toValidNumber(g.prospek ? g.prospek.total : null);
-    var bookingPctRaw = toValidNumber(g.booking ? g.booking.pct : null);
-    var submissionPctRaw = toValidNumber(g.submission ? g.submission.pct : null);
-    var registerPctRaw = toValidNumber(g.register ? g.register.pct : null);
+    var week1;
+    if (targets) {
+      var g = entry.groups || {};
+      var prospectVal = toValidNumber(g.prospek ? g.prospek.total : null);
+      var bookingPctRaw = toValidNumber(g.booking ? g.booking.pct : null);
+      var submissionPctRaw = toValidNumber(g.submission ? g.submission.pct : null);
+      var registerPctRaw = toValidNumber(g.register ? g.register.pct : null);
 
-    var bookingPct = bookingPctRaw !== null ? bookingPctRaw * 100 : null;
-    var submissionPct = submissionPctRaw !== null ? submissionPctRaw * 100 : null;
-    var registerPct = registerPctRaw !== null ? registerPctRaw * 100 : null;
+      var bookingPct = bookingPctRaw !== null ? bookingPctRaw * 100 : null;
+      var submissionPct = submissionPctRaw !== null ? submissionPctRaw * 100 : null;
+      var registerPct = registerPctRaw !== null ? registerPctRaw * 100 : null;
 
-    var p = targets ? evalWeek1Metric(prospectVal, targets.prospect, "int") : neutralWeek1Result();
-    var b = targets ? evalWeek1Metric(bookingPct, targets.booking_pct, "pct") : neutralWeek1Result();
-    var s = targets ? evalWeek1Metric(submissionPct, targets.submission_pct, "pct") : neutralWeek1Result();
-    var r = targets ? evalWeek1Metric(registerPct, targets.register_pct, "pct") : neutralWeek1Result();
+      week1 =
+        scorecardCell(prospectVal, targets.prospect, String(targets.prospect)) +
+        scorecardCell(bookingPct, targets.booking_pct, targets.booking_pct + "%") +
+        scorecardCell(submissionPct, targets.submission_pct, targets.submission_pct + "%") +
+        scorecardCell(registerPct, targets.register_pct, targets.register_pct + "%");
+    } else {
+      week1 = '<td class="kpi-cell kpi-neutral">–</td>'.repeat(4);
+    }
 
-    var week1 =
-      '<td class="num week-cell week-' + p.status + '">' + p.text + "</td>" +
-      '<td class="num week-cell week-' + b.status + '">' + b.text + "</td>" +
-      '<td class="num week-cell week-' + s.status + '">' + s.text + "</td>" +
-      '<td class="num week-cell week-' + r.status + '">' + r.text + "</td>";
+    var placeholder = '<td class="kpi-cell kpi-neutral kpi-placeholder">–</td>';
+    var weeks234 = placeholder.repeat(12);
 
-    var placeholder = '<td class="num week-cell week-neutral week-placeholder">–</td>';
-    var weeks234 = "";
-    for (var i = 0; i < 12; i++) weeks234 += placeholder;
+    return "<tr" + cls + ">" + nameCell + week1 + weeks234 + "</tr>";
+  }
 
-    return week1 + weeks234;
+  function renderKpiScorecard(teams) {
+    if (!teams) return;
+    TEAM_ORDER.forEach(function (key) {
+      var team = teams[key];
+      if (!team) return;
+
+      var rowsHtml = (team.rows || []).map(function (r) { return kpiScorecardRowHtml(r, false); }).join("");
+      if (team.total) {
+        rowsHtml += kpiScorecardRowHtml(Object.assign({}, team.total, { name: "TOTAL" }), true);
+      }
+      setHtml("kpi-rows-" + key, rowsHtml);
+    });
   }
 
   // --------------------------------------------------------------------
@@ -225,7 +235,7 @@
 
   function teamRowHtml(entry, isTotal) {
     var cls = isTotal ? ' class="row--total"' : "";
-    return "<tr" + cls + ">" + baseCells(entry) + weeklyTargetCells(entry, isTotal) + detailCells(entry) + "</tr>";
+    return "<tr" + cls + ">" + baseCells(entry) + detailCells(entry) + "</tr>";
   }
 
   function renderTeamDetail(teams) {
@@ -242,6 +252,7 @@
         setHtml("total-" + key, teamRowHtml(fakeTotal, true));
       }
     });
+    renderKpiScorecard(teams);
   }
 
   // --------------------------------------------------------------------

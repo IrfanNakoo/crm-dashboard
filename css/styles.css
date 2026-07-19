@@ -559,68 +559,95 @@ body {
 }
 
 /* ==========================================================================
-   WEEKLY PERFORMANCE TARGET
-   Always-visible section (not gated by the channel breakdown toggle),
-   placed right after the base performance metrics. Only Week 1 currently
-   evaluates pass/fail; Weeks 2-4 are muted placeholders for later.
+   KPI SCORECARD — standalone card, separate from the Team Detail table.
+   Shows the TARGET value (not the actual figure already shown above),
+   colored by whether the SA met it. Own scroll container, own visual
+   identity — meant to read like a scorecard, not another spreadsheet.
    ========================================================================== */
 
-.perf-table thead th.week-group--active {
+.kpi-scorecard-card {
+  margin-top: 20px;
+}
+
+.kpi-scorecard-subtitle {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.kpi-scorecard-scroll {
+  max-height: 50vh;
+}
+
+.kpi-scorecard-table {
+  min-width: 700px;
+}
+
+.kpi-scorecard-table th.week-group--active {
   background: #EEF2FF;
   color: #3730A3;
 }
 
-.perf-table thead th.week-group--placeholder {
+.kpi-scorecard-table th.week-group--placeholder {
   background: var(--bg-page);
   color: var(--text-tertiary);
   border-bottom: 1px dashed var(--border-strong);
   font-weight: 600;
 }
 
-.perf-table thead th.week-subheader--active {
+.kpi-scorecard-table th.week-subheader--active {
   background: var(--bg-card);
   color: var(--text-secondary);
 }
 
-.perf-table thead th.week-subheader--placeholder {
+.kpi-scorecard-table th.week-subheader--placeholder {
   background: var(--bg-page);
   color: var(--text-tertiary);
 }
 
-/* First column of the Weekly Target section gets the same strong-divider
-   treatment as the breakdown groups, so it reads as its own section */
-.perf-table thead th.week-group--active {
-  border-left: 3px solid #A5B4FC;
+/* Scorecard cells read as small badges/chips rather than plain grid
+   cells — reinforces the "scorecard, not spreadsheet" feel */
+.kpi-scorecard-table td.kpi-cell {
+  text-align: center;
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 14px;
 }
 
-.perf-table tbody td.week-cell:nth-of-type(1),
-.perf-table tfoot td.week-cell:nth-of-type(1) {
-  border-left: 3px solid #A5B4FC;
-  padding-left: 18px;
+.kpi-pass {
+  background: var(--green-50);
+  color: var(--green-600);
+  border: 1.5px solid #86EFAC;
+  border-radius: var(--radius-sm);
 }
 
-.week-pass {
-  background: #EAFBF1 !important;
-  color: var(--text-primary);
-  font-weight: 600;
-  border-color: #A7F3D0 !important;
+.kpi-fail {
+  background: #FEF2F2;
+  color: var(--red-600);
+  border: 1.5px solid #FCA5A5;
+  border-radius: var(--radius-sm);
 }
 
-.week-fail {
-  background: #FEF2F2 !important;
-  color: var(--text-primary);
-  font-weight: 600;
-  border-color: #FECACA !important;
-}
-
-.week-neutral {
+.kpi-neutral {
   color: var(--text-tertiary);
+  font-weight: 500;
 }
 
-.week-placeholder {
-  background: var(--bg-page) !important;
-  color: var(--text-tertiary);
+.kpi-placeholder {
+  background: var(--bg-page);
   font-style: italic;
+}
+
+.kpi-scorecard-table tbody tr:nth-child(odd) td:not(.kpi-pass):not(.kpi-fail) {
+  background: #FFFFFF;
+}
+
+.kpi-scorecard-table tbody tr:nth-child(even) td:not(.kpi-pass):not(.kpi-fail) {
+  background: #FAFAFA;
+}
+
+.kpi-scorecard-table tbody tr:hover td:not(.kpi-pass):not(.kpi-fail) {
+  background: var(--bg-page);
 }
 
 /* ---- Sticky header — both header rows stay visible while scrolling
